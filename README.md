@@ -51,9 +51,9 @@ module.exports = {
 
 ---
 
-## 📚 Available Components
+## 📚 Components Usage Template
 
-### 1️⃣ **Code Clipboard Component**
+### **Code Clipboard Component**
 
 Easily copy code snippets with a click of a button.
 
@@ -89,7 +89,7 @@ If you want to contribute or customize the library:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your-username/shadlc.git
+   git clone https://github.com/Taha-Asif-313/shadlc.git
    cd shadlc
    ```
 
@@ -99,13 +99,7 @@ If you want to contribute or customize the library:
    npm install
    ```
 
-3. Start the development server:
-
-   ```sh
-   npm run dev
-   ```
-
-4. Build the package for production:
+3. Build the package for production:
 
    ```sh
    npm run build
