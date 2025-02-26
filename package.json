@@ -9,9 +9,7 @@
     "import": "./dist/index.es.js",
     "require": "./dist/index.cjs.js"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "type": "module",
   "scripts": {
     "build": "vite build",
