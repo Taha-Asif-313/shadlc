@@ -1,0 +1,55 @@
+{
+  "name": "shadlc",
+  "version": "1.0.0",
+  "description": "A reusable UI component library built with React, TypeScript, and Tailwind CSS",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs.js"
+  },
+  "files": ["dist"],
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "lint": "eslint . --ext ts,tsx --fix",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^3.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Taha-Asif-313/shadlc.git"
+  },
+  "keywords": [
+    "react",
+    "ui-library",
+    "components",
+    "typescript",
+    "tailwind",
+    "vite"
+  ],
+  "author": "Taha Asif"
+}

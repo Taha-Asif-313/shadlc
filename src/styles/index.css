@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Slide Animations */
+@keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutLeft {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  /* Fade Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  /* Zoom Animations */
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes zoomOut {
+    from {
+      transform: scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+  
+  /* Bounce Animations */
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes bounceOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+  
+  /* Rotate Animations */
+  @keyframes rotateIn {
+    from {
+      transform: rotate(-180deg);
+      opacity: 0;
+    }
+    to {
+      transform: rotate(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes rotateOut {
+    from {
+      transform: rotate(0);
+      opacity: 1;
+    }
+    to {
+      transform: rotate(180deg);
+      opacity: 0;
+    }
+  }
+  
+  /* Apply Animation Classes */
+  .animate-slide-in-left {
+    animation: slideInLeft 0.3s ease-out forwards;
+  }
+  .animate-slide-out-left {
+    animation: slideOutLeft 0.3s ease-in forwards;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out forwards;
+  }
+  .animate-slide-out-right {
+    animation: slideOutRight 0.3s ease-in forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+  }
+  
+  .animate-zoom-in {
+    animation: zoomIn 0.3s ease-out forwards;
+  }
+  .animate-zoom-out {
+    animation: zoomOut 0.3s ease-in forwards;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.4s ease-out forwards;
+  }
+  .animate-bounce-out {
+    animation: bounceOut 0.4s ease-in forwards;
+  }
+  
+  .animate-rotate-in {
+    animation: rotateIn 0.4s ease-out forwards;
+  }
+  .animate-rotate-out {
+    animation: rotateOut 0.4s ease-in forwards;
+  }
+  
