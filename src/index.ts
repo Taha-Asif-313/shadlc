@@ -18,6 +18,8 @@ export { Dropdown } from "./components/basic/DropDown";
 export { Navbar } from "./components/basic/Navbar";
 export { Footer } from "./components/basic/Footer";
 export { Table } from "./components/basic/Table";
+export { Clipboard } from "./components/basic/Clipboard";
+export { CodeClipboard } from "./components/basic/CodeClipboard";
 
 // Alerts
 export { Alert } from "./components/alerts/Alert";

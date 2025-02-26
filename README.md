@@ -1,50 +1,125 @@
-# React + TypeScript + Vite
+# ShadLC - A Modern UI Library for React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ShadLC** is a lightweight and customizable UI component library built for **React** with **Tailwind CSS**. It provides reusable and stylish components to speed up your development process while keeping your UI clean and modern.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 📌 **Pre-styled & Customizable** – Components are designed with Tailwind CSS and can be customized easily.
+- ⚡ **Lightweight & Fast** – Optimized for performance and smooth user experience.
+- 🏗 **Reusable Components** – Copy-paste-ready components for quick integration.
+- 🎨 **Theming Support** – Modify styles to match your brand identity.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🚀 Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+To use **ShadLC** in your project, install it via npm:
+
+```sh
+npm install shadlc
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+or with Yarn:
+
+```sh
+yarn add shadlc
+```
+
+Make sure you have **Tailwind CSS** installed in your project. If not, install it:
+
+```sh
+npm install tailwindcss postcss autoprefixer
+npx tailwindcss init
+```
+
+Then, configure your `tailwind.config.js` to include the library’s styles:
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
+module.exports = {
+  content: [
+    "./node_modules/shadlc/**/*.js",
+    "./src/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
   },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+  plugins: [],
+};
 ```
+
+---
+
+## 📚 Available Components
+
+### 1️⃣ **Code Clipboard Component**
+
+Easily copy code snippets with a click of a button.
+
+#### 🔹 Usage
+
+```tsx
+import { CodeClipboard } from "shadlc";
+
+const codeSnippet = `const hello = "Hello, World!";`;
+
+const App = () => {
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">Copy Code Example</h1>
+      <CodeClipboard code={codeSnippet} />
+    </div>
+  );
+};
+```
+
+#### 🔹 Features
+
+- 📋 Click-to-copy button with a **clipboard icon**
+- ✅ Shows "Copied!" confirmation message
+- 🎨 Customizable styles & animations
+
+---
+
+## 🛠 Development & Contribution
+
+If you want to contribute or customize the library:
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/your-username/shadlc.git
+   cd shadlc
+   ```
+
+2. Install dependencies:
+
+   ```sh
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```sh
+   npm run dev
+   ```
+
+4. Build the package for production:
+
+   ```sh
+   npm run build
+   ```
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** – feel free to use and modify it as needed.
+
+---
+
+## 💬 Need Help?
+
+If you have any questions or need support, feel free to [open an issue](https://github.com/your-username/shadlc/issues) or reach out via email.
+
