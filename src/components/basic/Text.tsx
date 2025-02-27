@@ -1,7 +1,7 @@
-import React from "react";
+import React , {JSX} from "react";
 
 interface TextProps {
-  as?: "p" | "span" | "strong" | "em" | "a" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  as?: keyof JSX.IntrinsicElements; // Corrected type for `as` prop
   children: React.ReactNode;
   className?: string;
   color?: string;
@@ -18,7 +18,7 @@ interface TextProps {
 }
 
 export const Text: React.FC<TextProps> = ({
-  as: Tag = "p",
+  as: Tag = "p", // Default to "p" tag
   children,
   className = "",
   color = "#333",
@@ -33,6 +33,14 @@ export const Text: React.FC<TextProps> = ({
   bold = false,
   strikethrough = false,
 }) => {
+  // Determine text decoration
+  const textDecoration = [
+    underline ? "underline" : "",
+    strikethrough ? "line-through" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <Tag
       className={className}
@@ -44,9 +52,7 @@ export const Text: React.FC<TextProps> = ({
         textTransform,
         letterSpacing,
         lineHeight,
-        textDecoration: `${underline ? "underline" : ""} ${
-          strikethrough ? "line-through" : ""
-        }`.trim(),
+        textDecoration: textDecoration || "none", // Fallback to "none" if empty
         fontStyle: italic ? "italic" : "normal",
       }}
     >
