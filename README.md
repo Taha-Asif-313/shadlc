@@ -27,6 +27,8 @@ or with Yarn:
 yarn add shadlc
 ```
 
+### ✅ Tailwind CSS Configuration (For Tailwind 3 & 4)
+
 Make sure you have **Tailwind CSS** installed in your project. If not, install it:
 
 ```sh
@@ -35,6 +37,8 @@ npx tailwindcss init
 ```
 
 Then, configure your `tailwind.config.js` to include the library’s styles:
+
+#### Tailwind CSS v3 Configuration:
 
 ```js
 module.exports = {
@@ -49,6 +53,29 @@ module.exports = {
 };
 ```
 
+#### Tailwind CSS v4 Configuration:
+
+```js
+export default {
+  content: [
+    "./node_modules/shadlc/**/*.js",
+    "./src/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+### ✅ Import ShadLC Styles
+
+After installing the package, import the styles in your main entry file:
+
+```tsx
+import "shadlc/style.css";
+```
+
 ---
 
 ## 📚 Components Usage Template
@@ -61,6 +88,7 @@ Easily copy code snippets with a click of a button.
 
 ```tsx
 import { CodeClipboard } from "shadlc";
+import "shadlc/style.css";
 
 const codeSnippet = `const hello = "Hello, World!";`;
 
@@ -115,5 +143,5 @@ This project is licensed under the **MIT License** – feel free to use and modi
 
 ## 💬 Need Help?
 
-If you have any questions or need support, feel free to [open an issue](https://github.com/your-username/shadlc/issues) or reach out via email.
+If you have any questions or need support, feel free to [open an issue](https://github.com/Taha-Asif-313/shadlc/issues) or reach out via email.
 

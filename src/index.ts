@@ -1,4 +1,4 @@
-import "./styles/index.css";
+import "./style.css"; // This should be the only import
 
 // Basic Components
 export { Text } from "./components/basic/Text";
@@ -20,6 +20,7 @@ export { Footer } from "./components/basic/Footer";
 export { Table } from "./components/basic/Table";
 export { Clipboard } from "./components/basic/Clipboard";
 export { CodeClipboard } from "./components/basic/CodeClipboard";
+export { Flexbox , GridView } from "./components/basic/Layouts";
 
 // Alerts
 export { Alert } from "./components/alerts/Alert";
