@@ -1,6 +1,6 @@
 {
   "name": "shadlc",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A fully customizable UI library built with React and Tailwind CSS.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -9,7 +9,7 @@
     ".": {
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts" 
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
@@ -21,7 +21,7 @@
     "dev": "vite",
     "lint": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
-    "prepare": "npm run build" 
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": "^19.0.0",
