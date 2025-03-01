@@ -8,19 +8,20 @@ export { Input } from "./components/basic/Input";
 export { TextArea } from "./components/basic/TextArea";
 export { List } from "./components/basic/List";
 export { Tabs } from "./components/basic/Tabs";
-export { Video } from "./components/basic/Video";
-export { Audio } from "./components/basic/Audio";
-export { Container } from "./components/basic/Container";
+export { VideoPlayer } from "./components/basic/VideoPlayer";
+export { AudioPlayer } from "./components/basic/AudioPlayer";
+export { default as Container } from "./components/basic/Container";
 export { Accordion } from "./components/basic/Accordation";
 export { CheckRadio } from "./components/basic/CheckRadioInput";
-export { Drawer } from "./components/basic/Drawer";
+export { default as Drawer } from "./components/basic/Drawer";
 export { Dropdown } from "./components/basic/DropDown";
 export { Navbar } from "./components/basic/Navbar";
 export { Footer } from "./components/basic/Footer";
 export { Table } from "./components/basic/Table";
 export { Clipboard } from "./components/basic/Clipboard";
 export { CodeClipboard } from "./components/basic/CodeClipboard";
-export { Flexbox , GridView } from "./components/basic/Layouts";
+export { default as GridView } from "./components/basic/GridView";
+export { default as Flexbox } from "./components/basic/Flexbox";
 
 // Alerts
 export { Alert } from "./components/alerts/Alert";

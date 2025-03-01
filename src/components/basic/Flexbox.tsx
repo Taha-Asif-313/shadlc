@@ -8,24 +8,24 @@ interface ResponsiveProps<T> {
   lg?: T;
 }
 
-interface ContainerProps {
-  width?: ResponsiveProps<string>;
-  maxWidth?: ResponsiveProps<string>;
+interface FlexboxProps {
+  direction?: ResponsiveProps<"row" | "column">;
+  align?: ResponsiveProps<"flex-start" | "flex-end" | "center" | "stretch" | "baseline">;
+  justify?: ResponsiveProps<"flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly">;
+  gap?: ResponsiveProps<number>;
   padding?: ResponsiveProps<string>;
-  margin?: ResponsiveProps<string>;
-  textAlign?: ResponsiveProps<"left" | "center" | "right">;
   backgroundColor?: string;
   children: React.ReactNode;
   className?: string
 }
 
-const Container: React.FC<ContainerProps> = ({
-  width = { sm: "100%", md: "90%", lg: "80%" },
-  maxWidth = { sm: "100%", md: "800px", lg: "1200px" },
+const Flexbox: React.FC<FlexboxProps> = ({
+  direction = { sm: "column", md: "row", lg: "row" },
+  align = { sm: "center", md: "center", lg: "center" },
+  justify = { sm: "center", md: "space-between", lg: "space-around" },
+  gap = { sm: 10, md: 20, lg: 30 },
   padding = { sm: "10px", md: "20px", lg: "40px" },
-  margin = { sm: "0 auto", md: "0 auto", lg: "0 auto" },
-  textAlign = { sm: "left", md: "center", lg: "center" },
-  backgroundColor = "#ffffff",
+  backgroundColor = "#f4f4f4",
   children,
   className
 }) => {
@@ -43,20 +43,23 @@ const Container: React.FC<ContainerProps> = ({
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  // Use memoization for performance optimization
   const styles = useMemo(
     () => ({
-      width: width[screenSize],
-      maxWidth: maxWidth[screenSize],
+      display: "flex",
+      flexDirection: direction[screenSize],
+      alignItems: align[screenSize],
+      justifyContent: justify[screenSize],
+      gap: `${gap[screenSize]}px`,
       padding: padding[screenSize],
-      margin: margin[screenSize],
-      textAlign: textAlign[screenSize],
       backgroundColor: backgroundColor,
-      boxSizing: "border-box" as const, // Ensures padding doesn't affect width
+      width: "100%",
+      height: "100%",
     }),
-    [screenSize, width, maxWidth, padding, margin, textAlign, backgroundColor]
+    [screenSize, direction, align, justify, gap, padding, backgroundColor]
   );
 
   return <div className={className} style={styles}>{children}</div>;
 };
 
-export default Container;
+export default Flexbox;

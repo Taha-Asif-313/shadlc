@@ -1,120 +1,124 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React from "react";
 
 interface DrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: ReactNode;
-  position?: "left" | "right" | "top" | "bottom";
-  width?: string;
-  height?: string;
-  bgColor?: string;
-  textColor?: string;
-  overlayColor?: string;
-  closeOnOverlayClick?: boolean;
-  closeOnEsc?: boolean;
-  footerButtons?: { label: string; onClick: () => void; color?: string }[];
-  enterAnimation?: string;
-  exitAnimation?: string;
+  open: boolean; // Whether the drawer is open
+  onClose?: () => void; // Callback when overlay is clicked to close the drawer
+  position?: "left" | "right" | "top" | "bottom"; // From which side the drawer appears
+  width?: string; // Applicable for left/right drawers (default: "250px")
+  height?: string; // Applicable for top/bottom drawers (default: "250px")
+  backgroundColor?: string; // Drawer background color
+  transitionDuration?: number; // Transition duration in milliseconds
+  style?: React.CSSProperties; // Additional custom inline styles for the drawer
+  children: React.ReactNode; // Inner content of the drawer
 }
 
-export const Drawer: React.FC<DrawerProps> = ({
-  isOpen,
+const Drawer: React.FC<DrawerProps> = ({
+  open,
   onClose,
-  title,
+  position = "left",
+  width = "250px",
+  height = "250px",
+  backgroundColor = "#fff",
+  transitionDuration = 300,
+  style = {},
   children,
-  position = "right",
-  width = "300px",
-  height = "100vh",
-  bgColor = "bg-white",
-  textColor = "text-black",
-  overlayColor = "bg-black bg-opacity-50",
-  closeOnOverlayClick = true,
-  closeOnEsc = true,
-  footerButtons = [],
-  enterAnimation = "animate-slide-in-right",
-  exitAnimation = "animate-slide-out-right",
 }) => {
-  const [isVisible, setIsVisible] = useState(isOpen);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-    } else {
-      setTimeout(() => setIsVisible(false), 300); // Ensure animation plays before unmounting
+  // Determines the CSS transform property based on the drawer position and open state
+  const getTransform = (): string => {
+    if (open) {
+      return "translate(0, 0)";
     }
-  }, [isOpen]);
+    switch (position) {
+      case "left":
+        return "translate(-100%, 0)";
+      case "right":
+        return "translate(100%, 0)";
+      case "top":
+        return "translate(0, -100%)";
+      case "bottom":
+        return "translate(0, 100%)";
+      default:
+        return "translate(0, 0)";
+    }
+  };
 
-  useEffect(() => {
-    if (!closeOnEsc) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, closeOnEsc]);
+  // Base inline styles for the drawer container
+  const drawerBaseStyle: React.CSSProperties = {
+    position: "fixed",
+    zIndex: 1000,
+    backgroundColor: backgroundColor,
+    transition: `transform ${transitionDuration}ms ease-in-out`,
+    ...style, // Merge any custom styles provided by the user
+  };
 
-  if (!isVisible) return null;
+  // Set up positioning and sizing based on the 'position' prop
+  let drawerSpecificStyle: React.CSSProperties = {};
+  switch (position) {
+    case "left":
+      drawerSpecificStyle = {
+        top: 0,
+        left: 0,
+        width: width,
+        height: "100%",
+        transform: getTransform(),
+      };
+      break;
+    case "right":
+      drawerSpecificStyle = {
+        top: 0,
+        right: 0,
+        width: width,
+        height: "100%",
+        transform: getTransform(),
+      };
+      break;
+    case "top":
+      drawerSpecificStyle = {
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: height,
+        transform: getTransform(),
+      };
+      break;
+    case "bottom":
+      drawerSpecificStyle = {
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height: height,
+        transform: getTransform(),
+      };
+      break;
+  }
+
+  // Combine base and specific styles
+  const combinedStyles = { ...drawerBaseStyle, ...drawerSpecificStyle };
+
+  // Optional overlay style that dims the background when the drawer is open
+  const overlayStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 999,
+    transition: `opacity ${transitionDuration}ms ease-in-out`,
+    opacity: open ? 1 : 0,
+    pointerEvents: open ? "auto" : "none", // Allows clicks only when visible
+  };
 
   return (
-    <div
-      className={`fixed inset-0 flex z-50 ${overlayColor} transition-opacity duration-300`}
-    >
-      {closeOnOverlayClick && (
-        <div className="absolute inset-0" onClick={onClose}></div>
-      )}
-
-      <div
-        className={`fixed shadow-lg ${bgColor} ${textColor} ${
-          isOpen ? enterAnimation : exitAnimation
-        }`}
-        style={{
-          ...(position === "right" || position === "left"
-            ? { width, height: "100vh" }
-            : { width: "100%", height }),
-          [position]: "0",
-        }}
-      >
-        {/* Header */}
-        {title && (
-          <div className="flex justify-between items-center border-b p-4">
-            <h2 className="text-lg font-bold">{title}</h2>
-            <button className="text-xl font-bold" onClick={onClose}>
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                height="30px"
-                width="30px"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M278.6 256l68.2-68.2c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-68.2-68.2c-6.2-6.2-16.4-6.2-22.6 0-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3l68.2 68.2-68.2 68.2c-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3 6.2 6.2 16.4 6.2 22.6 0l68.2-68.2 68.2 68.2c6.2 6.2 16.4 6.2 22.6 0 6.2-6.2 6.2-16.4 0-22.6L278.6 256z"></path>
-              </svg>
-            </button>
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="p-4">{children}</div>
-
-        {/* Footer */}
-        {footerButtons.length > 0 && (
-          <div className="flex justify-end border-t p-4 space-x-2">
-            {footerButtons.map((btn, index) => (
-              <button
-                key={index}
-                className={`px-4 py-2 rounded ${
-                  btn.color || "bg-blue-500 text-white"
-                }`}
-                onClick={btn.onClick}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
-        )}
+    <>
+      {/* Overlay for closing the drawer */}
+      <div style={overlayStyle} onClick={onClose} />
+      {/* Drawer container with inner content */}
+      <div style={combinedStyles}>
+        {children}
       </div>
-    </div>
+    </>
   );
 };
+
+export default Drawer;

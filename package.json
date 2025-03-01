@@ -62,5 +62,8 @@
     "tailwind",
     "vite"
   ],
-  "author": "Taha Asif"
+  "author": "Taha Asif",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }
