@@ -76,6 +76,14 @@ After installing the package, import the styles in your main entry file:
 import "shadlc/style.css";
 ```
 
+### ✅ To use client components
+
+Use the use client on the top if you are using nextjs.
+
+```tsx
+"use client";
+```
+
 ---
 
 ## 📚 Components Usage Template
