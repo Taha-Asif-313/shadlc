@@ -11,23 +11,25 @@ interface ResponsiveProps<T> {
 interface ContainerProps {
   width?: ResponsiveProps<string>;
   maxWidth?: ResponsiveProps<string>;
+  height?: ResponsiveProps<string>; // Added height
   padding?: ResponsiveProps<string>;
   margin?: ResponsiveProps<string>;
   textAlign?: ResponsiveProps<"left" | "center" | "right">;
   backgroundColor?: string;
   children: React.ReactNode;
-  className?: string
+  className?: string;
 }
 
 const Container: React.FC<ContainerProps> = ({
   width = { sm: "100%", md: "90%", lg: "80%" },
   maxWidth = { sm: "100%", md: "800px", lg: "1200px" },
+  height = { sm: "auto", md: "auto", lg: "auto" }, // Default height values
   padding = { sm: "10px", md: "20px", lg: "40px" },
   margin = { sm: "0 auto", md: "0 auto", lg: "0 auto" },
   textAlign = { sm: "left", md: "center", lg: "center" },
   backgroundColor = "#ffffff",
   children,
-  className
+  className,
 }) => {
   const [screenSize, setScreenSize] = useState<ScreenSize>("lg");
 
@@ -47,13 +49,14 @@ const Container: React.FC<ContainerProps> = ({
     () => ({
       width: width[screenSize],
       maxWidth: maxWidth[screenSize],
+      height: height[screenSize], // Applied height
       padding: padding[screenSize],
       margin: margin[screenSize],
       textAlign: textAlign[screenSize],
-      backgroundColor: backgroundColor,
+      backgroundColor,
       boxSizing: "border-box" as const, // Ensures padding doesn't affect width
     }),
-    [screenSize, width, maxWidth, padding, margin, textAlign, backgroundColor]
+    [screenSize, width, maxWidth, height, padding, margin, textAlign, backgroundColor]
   );
 
   return <div className={className} style={styles}>{children}</div>;
