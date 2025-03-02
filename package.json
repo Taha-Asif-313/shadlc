@@ -1,6 +1,6 @@
 {
   "name": "shadlc",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A fully customizable UI library built with React and Tailwind CSS.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
