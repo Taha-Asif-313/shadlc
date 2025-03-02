@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FiEye, FiEyeOff, FiX } from "react-icons/fi"; // Importing icons
 
 interface InputProps {
   type?: "text" | "password" | "email" | "number" | "search" | "tel" | "url";
@@ -17,6 +18,13 @@ interface InputProps {
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
   className?: string;
+  borderColor?: string;
+  focusBorderColor?: string;
+  hoverBorderColor?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  errorColor?: string;
+  successColor?: string;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -36,6 +44,13 @@ export const Input: React.FC<InputProps> = ({
   iconLeft,
   iconRight,
   className = "",
+  borderColor = "#ccc",
+  focusBorderColor = "#007bff",
+  hoverBorderColor = "#666",
+  backgroundColor = "#fff",
+  textColor = "#000",
+  errorColor = "#e53e3e",
+  successColor = "#38a169",
 }) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue || "");
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -50,22 +65,73 @@ export const Input: React.FC<InputProps> = ({
     if (onChange) onChange("");
   };
 
+  const inputStyles: React.CSSProperties = {
+    width: "100%",
+    padding: "8px 16px",
+    border: `1px solid ${
+      error ? errorColor : success ? successColor : borderColor
+    }`,
+    borderRadius: "6px",
+    backgroundColor,
+    color: textColor,
+    transition: "all 0.3s ease-in-out",
+    outline: "none",
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = focusBorderColor;
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = error
+      ? errorColor
+      : success
+      ? successColor
+      : borderColor;
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = hoverBorderColor;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = error
+      ? errorColor
+      : success
+      ? successColor
+      : borderColor;
+  };
+
   return (
-    <div className={`w-full ${className}`}>
-      {/* Label */}
+    <div style={{ width: "100%" }} className={className}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 ">
-          {label} {required && <span className="text-red-500">*</span>}
+        <label
+          style={{
+            marginBottom: "5px",
+            display: "block",
+            fontSize: "14px",
+            fontWeight: "500",
+            color: textColor,
+          }}
+        >
+          {label} {required && <span style={{ color: errorColor }}>*</span>}
         </label>
       )}
 
-      <div className="relative w-full">
-        {/* Left Icon */}
+      <div style={{ position: "relative", width: "100%" }}>
         {iconLeft && (
-          <span className="absolute left-3 top-2.5">{iconLeft}</span>
+          <span
+            style={{
+              position: "absolute",
+              left: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            {iconLeft}
+          </span>
         )}
 
-        {/* Input Field */}
         <input
           type={
             type === "password"
@@ -80,74 +146,75 @@ export const Input: React.FC<InputProps> = ({
           disabled={disabled}
           readOnly={readOnly}
           autoFocus={autoFocus}
-          className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
-            iconLeft ? "pl-10" : ""
-          } ${iconRight || clearable || type === "password" ? "pr-10" : ""} ${
-            error
-              ? "border-red-500 focus:ring-1 focus:ring-red-400"
-              : success
-              ? "border-green-500 focus:ring-1 focus:ring-green-400"
-              : "border-gray-300 focus:ring-1 focus:ring-blue-400"
-          }`}
+          style={{
+            ...inputStyles,
+            paddingLeft: iconLeft ? "36px" : "16px",
+            paddingRight:
+              iconRight || clearable || type === "password" ? "36px" : "16px",
+          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         />
 
-        {/* Right Icon */}
         {iconRight && type !== "password" && !clearable && (
-          <span className="absolute right-3 top-2.5">{iconRight}</span>
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            {iconRight}
+          </span>
         )}
 
-        {/* Clear Button */}
         {clearable && inputValue && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "transparent",
+              border: "none",
+              color: "#666",
+              cursor: "pointer",
+            }}
           >
-            ✕
+            <FiX size={16} />
           </button>
         )}
 
-        {/* Password Toggle Button */}
         {type === "password" && (
           <button
             type="button"
             onClick={() => setPasswordVisible(!isPasswordVisible)}
-            className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "transparent",
+              border: "none",
+              color: "#666",
+              cursor: "pointer",
+            }}
           >
-            {isPasswordVisible ? ( // Eye-Off SVG (Hide Password)
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                className="w-5 h-5"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M8.073 12.194 4.212 8.333c-1.52 1.657-2.096 3.317-2.106 3.351L2 12l.105.316C2.127 12.383 4.421 19 12.054 19c.929 0 1.775-.102 2.552-.273l-2.746-2.746a3.987 3.987 0 0 1-3.787-3.787zM12.054 5c-1.855 0-3.375.404-4.642.998L3.707 2.293 2.293 3.707l18 18 1.414-1.414-3.298-3.298c2.638-1.953 3.579-4.637 3.593-4.679l.105-.316-.105-.316C21.98 11.617 19.687 5 12.054 5zm1.906 7.546c.187-.677.028-1.439-.492-1.96s-1.283-.679-1.96-.492L10 8.586A3.955 3.955 0 0 1 12.054 8c2.206 0 4 1.794 4 4a3.94 3.94 0 0 1-.587 2.053l-1.507-1.507z"></path>
-              </svg> // Eye SVG (Show Password)
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 12s3.75-6 9-6 9 6 9 6-3.75 6-9 6-9-6-9-6z"
-                />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            )}
+            {isPasswordVisible ? <FiEyeOff size={18} /> : <FiEye size={18} />}
           </button>
         )}
       </div>
 
-      {/* Error Message */}
-      {error && <p className="text-[12px] text-red-500">{error}</p>}
+      {error && (
+        <p style={{ fontSize: "12px", color: errorColor, marginTop: "4px" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 };

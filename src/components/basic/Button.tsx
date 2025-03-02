@@ -17,6 +17,12 @@ interface ButtonProps {
   iconBefore?: React.ReactNode;
   iconAfter?: React.ReactNode;
   onClick?: () => void;
+  padding?: string;
+  margin?: string;
+  fontSize?: string;
+  fontWeight?: string | number;
+  borderRadius?: string;
+  boxShadow?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -36,19 +42,29 @@ export const Button: React.FC<ButtonProps> = ({
   iconBefore,
   iconAfter,
   onClick,
+  padding,
+  margin,
+  fontSize,
+  fontWeight,
+  borderRadius = "6px",
+  boxShadow,
 }) => {
   const baseStyles: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "500",
-    borderRadius: "6px",
+    fontWeight: fontWeight || "500",
+    borderRadius: borderRadius,
     transition: "all 0.3s ease-in-out",
     cursor: disabled ? "not-allowed" : "pointer",
     width: fullWidth ? "100%" : "auto",
     backgroundColor: backgroundColor || undefined,
     color: textColor || undefined,
     border: borderColor ? `1px solid ${borderColor}` : "none",
+    padding: padding || undefined,
+    margin: margin || undefined,
+    fontSize: fontSize || undefined,
+    boxShadow: boxShadow || undefined,
   };
 
   const hoverStyles: React.CSSProperties = {
@@ -57,17 +73,17 @@ export const Button: React.FC<ButtonProps> = ({
     borderColor: hoverBorderColor || undefined,
   };
 
-  // Size styles
+  // Predefined size styles
   const sizeStyles: Record<string, React.CSSProperties> = {
-    sm: { padding: "6px 12px", fontSize: "14px" },
-    md: { padding: "8px 16px", fontSize: "16px" },
-    lg: { padding: "10px 20px", fontSize: "18px" },
+    sm: { padding: padding || "6px 12px", fontSize: fontSize || "14px" },
+    md: { padding: padding || "8px 16px", fontSize: fontSize || "16px" },
+    lg: { padding: padding || "10px 20px", fontSize: fontSize || "18px" },
   };
 
   return (
     <button
       type={type}
-      className={`${className}`}
+      className={className}
       style={{ ...baseStyles, ...sizeStyles[size] }}
       onClick={!disabled && !loading ? onClick : undefined}
       disabled={disabled}

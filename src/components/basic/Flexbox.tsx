@@ -21,7 +21,7 @@ interface FlexboxProps {
     | "space-around"
     | "space-evenly"
   >;
-  gap?: ResponsiveProps<string>; // Changed to string for "10px" safety
+  gap?: ResponsiveProps<string>;
   padding?: ResponsiveProps<string>;
   backgroundColor?: string;
   children: React.ReactNode;
@@ -35,14 +35,14 @@ const Flexbox: React.FC<FlexboxProps> = ({
   direction = { sm: "column", md: "row", lg: "row" },
   align = { sm: "center", md: "center", lg: "center" },
   justify = { sm: "center", md: "space-between", lg: "space-around" },
-  gap = { sm: "10px", md: "20px", lg: "30px" }, // Changed default to strings
+  gap = { sm: "10px", md: "20px", lg: "30px" },
   padding = { sm: "10px", md: "20px", lg: "40px" },
   backgroundColor = "#f4f4f4",
   width = { sm: "100%", md: "100%", lg: "100%" },
   height = { sm: "auto", md: "auto", lg: "auto" },
   maxWidth = { sm: "100%", md: "100%", lg: "100%" },
   children,
-  className,
+  className = "", // Ensuring it's always a string
 }) => {
   const [screenSize, setScreenSize] = useState<ScreenSize>("lg");
 
@@ -53,26 +53,39 @@ const Flexbox: React.FC<FlexboxProps> = ({
       else setScreenSize("lg");
     };
 
-    updateSize(); // Set initial state
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
+    updateSize(); // Initial state
+    const resizeHandler = () => requestAnimationFrame(updateSize);
+    window.addEventListener("resize", resizeHandler);
+
+    return () => window.removeEventListener("resize", resizeHandler);
   }, []);
 
   // Memoized styles
   const styles = useMemo(
     () => ({
       display: "flex",
-      flexDirection: direction[screenSize],
-      alignItems: align[screenSize],
-      justifyContent: justify[screenSize],
-      gap: gap[screenSize], // Already in string format
+      flexDirection: direction[screenSize] as "row" | "column",
+      alignItems: align[screenSize] as
+        | "flex-start"
+        | "flex-end"
+        | "center"
+        | "stretch"
+        | "baseline",
+      justifyContent: justify[screenSize] as
+        | "flex-start"
+        | "flex-end"
+        | "center"
+        | "space-between"
+        | "space-around"
+        | "space-evenly",
+      gap: gap[screenSize],
       padding: padding[screenSize],
       backgroundColor,
-      width: width[screenSize], // Now applied
-      maxWidth: maxWidth[screenSize], // Now applied
+      width: width[screenSize],
+      maxWidth: maxWidth[screenSize],
       height: height[screenSize],
     }),
-    [screenSize, direction, align, justify, gap, padding, width, maxWidth, height]
+    [screenSize, direction, align, justify, gap, padding, width, maxWidth, height, backgroundColor]
   );
 
   return (

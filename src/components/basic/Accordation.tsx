@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface AccordionItem {
   title: string;
@@ -7,15 +7,21 @@ interface AccordionItem {
 
 interface AccordionProps {
   items: AccordionItem[];
-  allowMultiple?: boolean; // Allow multiple sections to be open
-  defaultOpenIndex?: number[]; // Default open indexes
+  allowMultiple?: boolean;
+  defaultOpenIndex?: number[];
   borderColor?: string;
   backgroundColor?: string;
   textColor?: string;
+  hoverColor?: string;
   padding?: string;
+  margin?: string;
   className?: string;
-  iconOpen?: React.ReactNode; // Icon when expanded
-  iconClose?: React.ReactNode; // Icon when collapsed
+  iconOpen?: React.ReactNode;
+  iconClose?: React.ReactNode;
+  transitionDuration?: string;
+  borderRadius?: string;
+  shadow?: string;
+  contentPadding?: string;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
@@ -25,48 +31,61 @@ export const Accordion: React.FC<AccordionProps> = ({
   borderColor = "border-gray-300",
   backgroundColor = "bg-white",
   textColor = "text-gray-900",
+  hoverColor = "hover:bg-gray-100",
   padding = "p-4",
+  margin = "mb-3",
   className = "",
-  iconOpen = "−", // Default icon for open state
-  iconClose = "+", // Default icon for closed state
+  iconOpen = "−",
+  iconClose = "+",
+  transitionDuration = "duration-300",
+  borderRadius = "rounded-md",
+  shadow = "shadow-md",
+  contentPadding = "p-4",
 }) => {
   const [openIndexes, setOpenIndexes] = useState<number[]>(defaultOpenIndex);
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    contentRefs.current.forEach((el, index) => {
+      if (el) {
+        el.style.maxHeight = openIndexes.includes(index) ? `${el.scrollHeight}px` : "0px";
+      }
+    });
+  }, [openIndexes]);
 
   const handleToggle = (index: number) => {
-    if (allowMultiple) {
-      setOpenIndexes((prev) =>
-        prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-      );
-    } else {
-      setOpenIndexes((prev) => (prev.includes(index) ? [] : [index]));
-    }
+    setOpenIndexes((prev) =>
+      allowMultiple
+        ? prev.includes(index)
+          ? prev.filter((i) => i !== index)
+          : [...prev, index]
+        : prev.includes(index)
+        ? []
+        : [index]
+    );
   };
 
   return (
     <div className={`w-full ${className}`}>
       {items.map((item, index) => (
-        <div
-          key={index}
-          className={`border ${borderColor} rounded-md overflow-hidden `}
-        >
+        <div key={index} className={`border ${borderColor} ${borderRadius} ${shadow} overflow-hidden ${margin}`}>
           {/* Accordion Header */}
           <button
             onClick={() => handleToggle(index)}
-            className={`w-full flex justify-between items-center ${padding} ${backgroundColor} ${textColor} font-semibold focus:outline-none`}
+            className={`w-full flex justify-between items-center ${padding} ${backgroundColor} ${textColor} font-semibold focus:outline-none ${hoverColor}`}
           >
-            {item.title}
-            <span className="text-xl">
-              {openIndexes.includes(index) ? iconOpen : iconClose}
-            </span>
+            <span>{item.title}</span>
+            <span className="text-xl">{openIndexes.includes(index) ? iconOpen : iconClose}</span>
           </button>
 
           {/* Accordion Content */}
           <div
-            className={`overflow-hidden transition-all duration-300 ${
-              openIndexes.includes(index) ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-            }`}
+            ref={(el) => {
+              contentRefs.current[index] = el;
+            }}
+            className={`transition-all ${transitionDuration} ease-in-out overflow-hidden`}
           >
-            <div className={`border-t ${borderColor} ${padding} ${backgroundColor}`}>
+            <div className={`border-t ${borderColor} ${contentPadding} ${backgroundColor}`}>
               {item.content}
             </div>
           </div>

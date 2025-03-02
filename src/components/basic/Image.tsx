@@ -6,14 +6,27 @@ interface ImageProps {
   width?: string;
   height?: string;
   borderRadius?: string;
+  borderColor?: string;
+  borderStyle?: "solid" | "dashed" | "dotted" | "double" | "none";
+  borderWidth?: string;
   shadow?: boolean;
+  boxShadow?: string;
   opacity?: number;
   className?: string;
   objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   overlayText?: string;
   overlayColor?: string;
-  svgIcon?: React.ReactNode; // Use SVG instead of an image
+  svgIcon?: React.ReactNode; // Render SVG instead of an image
   responsive?: boolean; // Enable responsive scaling
+  padding?: string;
+  margin?: string;
+  lazyLoad?: boolean;
+  hoverOpacity?: number;
+  hoverShadow?: boolean;
+  hoverScale?: number;
+  hoverRotate?: number;
+  transitionDuration?: string;
+  onClick?: () => void;
 }
 
 export const Image: React.FC<ImageProps> = ({
@@ -22,7 +35,11 @@ export const Image: React.FC<ImageProps> = ({
   width = "100%",
   height = "100%",
   borderRadius = "8px",
+  borderColor = "transparent",
+  borderStyle = "solid",
+  borderWidth = "0px",
   shadow = false,
+  boxShadow,
   opacity = 1,
   className = "",
   objectFit = "cover",
@@ -30,13 +47,27 @@ export const Image: React.FC<ImageProps> = ({
   overlayColor = "rgba(0, 0, 0, 0.5)",
   svgIcon,
   responsive = true,
+  padding,
+  margin,
+  lazyLoad = false,
+  hoverOpacity,
+  hoverShadow = false,
+  hoverScale,
+  hoverRotate,
+  transitionDuration = "0.3s",
+  onClick,
 }) => {
   return (
     <div
-      className={`relative ${className} ${
-        responsive ? "w-full" : ""
-      }`}
-      style={{ width, height }}
+      className={`relative ${className} ${responsive ? "w-full" : ""}`}
+      style={{
+        width,
+        height,
+        padding,
+        margin,
+        cursor: onClick ? "pointer" : "default",
+      }}
+      onClick={onClick}
     >
       {/* Render SVG instead of image if provided */}
       {svgIcon ? (
@@ -47,15 +78,39 @@ export const Image: React.FC<ImageProps> = ({
         <img
           src={src}
           alt={alt}
+          loading={lazyLoad ? "lazy" : "eager"}
           style={{
             width: responsive ? "100%" : width,
             height: responsive ? "100%" : height,
             borderRadius,
+            border: `${borderWidth} ${borderStyle} ${borderColor}`,
             objectFit,
             opacity,
-            boxShadow: shadow ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "none",
+            boxShadow: shadow
+              ? boxShadow || "0 4px 8px rgba(0, 0, 0, 0.2)"
+              : "none",
+            transition: `all ${transitionDuration} ease-in-out`,
           }}
           className="w-full h-full"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity =
+              hoverOpacity !== undefined
+                ? hoverOpacity.toString()
+                : opacity.toString();
+            e.currentTarget.style.boxShadow = hoverShadow
+              ? "0 8px 16px rgba(0, 0, 0, 0.3)"
+              : boxShadow || "none";
+            e.currentTarget.style.transform = `scale(${
+              hoverScale || 1
+            }) rotate(${hoverRotate || 0}deg)`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = opacity.toString();
+            e.currentTarget.style.boxShadow = shadow
+              ? boxShadow || "0 4px 8px rgba(0, 0, 0, 0.2)"
+              : "none";
+            e.currentTarget.style.transform = "scale(1) rotate(0deg)";
+          }}
         />
       )}
 

@@ -21,6 +21,7 @@ interface CardProps {
   buttonOnClick?: () => void;
   buttonClassName?: string;
   buttonIcon?: React.ReactNode;
+  margin?: string;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -44,6 +45,7 @@ export const Card: React.FC<CardProps> = ({
   buttonOnClick,
   buttonClassName = "",
   buttonIcon,
+  margin
 }) => {
   return (
     <div
@@ -53,6 +55,7 @@ export const Card: React.FC<CardProps> = ({
         color: textColor,
         borderRadius,
         padding,
+        margin,
         boxShadow: shadow,
       }}
     >
