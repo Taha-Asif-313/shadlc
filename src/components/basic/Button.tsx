@@ -4,11 +4,13 @@ interface ButtonProps {
   children: React.ReactNode;
   className?: string;
   type?: "button" | "submit" | "reset";
-  variant?: "primary" | "secondary" | "outline" | "link";
   size?: "sm" | "md" | "lg";
   backgroundColor?: string;
   textColor?: string;
   borderColor?: string;
+  hoverBgColor?: string;
+  hoverTextColor?: string;
+  hoverBorderColor?: string;
   fullWidth?: boolean;
   disabled?: boolean;
   loading?: boolean;
@@ -21,11 +23,13 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   className = "",
   type = "button",
-  variant = "primary",
   size = "md",
   backgroundColor,
   textColor,
   borderColor,
+  hoverBgColor,
+  hoverTextColor,
+  hoverBorderColor,
   fullWidth = false,
   disabled = false,
   loading = false,
@@ -33,50 +37,63 @@ export const Button: React.FC<ButtonProps> = ({
   iconAfter,
   onClick,
 }) => {
-  const baseStyles =
-    "flex items-center justify-center font-medium rounded-md transition-all focus:outline-none";
+  const baseStyles: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "500",
+    borderRadius: "6px",
+    transition: "all 0.3s ease-in-out",
+    cursor: disabled ? "not-allowed" : "pointer",
+    width: fullWidth ? "100%" : "auto",
+    backgroundColor: backgroundColor || undefined,
+    color: textColor || undefined,
+    border: borderColor ? `1px solid ${borderColor}` : "none",
+  };
 
-  // Default styles based on variants
-  const variants = {
-    primary: `bg-blue-500 text-white hover:bg-blue-600`,
-    secondary: `bg-gray-500 text-white hover:bg-gray-600`,
-    outline: `border border-gray-500 text-gray-700 hover:bg-gray-100`,
-    link: `text-blue-500 hover:underline`,
+  const hoverStyles: React.CSSProperties = {
+    backgroundColor: hoverBgColor || undefined,
+    color: hoverTextColor || undefined,
+    borderColor: hoverBorderColor || undefined,
   };
 
   // Size styles
-  const sizes = {
-    sm: "px-3 py-1 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
+  const sizeStyles: Record<string, React.CSSProperties> = {
+    sm: { padding: "6px 12px", fontSize: "14px" },
+    md: { padding: "8px 16px", fontSize: "16px" },
+    lg: { padding: "10px 20px", fontSize: "18px" },
   };
 
   return (
     <button
       type={type}
-      className={`
-        ${baseStyles} 
-        ${variants[variant]} 
-        ${sizes[size]} 
-        ${fullWidth ? "w-full" : ""}
-        ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-        ${className}
-      `}
-      style={{
-        backgroundColor: backgroundColor || undefined,
-        color: textColor || undefined,
-        borderColor: borderColor || undefined,
-      }}
+      className={`${className}`}
+      style={{ ...baseStyles, ...sizeStyles[size] }}
       onClick={!disabled && !loading ? onClick : undefined}
       disabled={disabled}
+      onMouseEnter={(e) => {
+        Object.assign(e.currentTarget.style, hoverStyles);
+      }}
+      onMouseLeave={(e) => {
+        Object.assign(e.currentTarget.style, baseStyles);
+      }}
     >
       {loading ? (
-        <span className="animate-spin h-5 w-5 border-4 border-white border-t-transparent rounded-full"></span>
+        <span
+          style={{
+            width: "20px",
+            height: "20px",
+            border: "3px solid currentColor",
+            borderTopColor: "transparent",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+          }}
+        ></span>
       ) : (
         <>
-          {iconBefore && <span className="mr-2">{iconBefore}</span>}
+          {iconBefore && <span style={{ marginRight: "8px" }}>{iconBefore}</span>}
           {children}
-          {iconAfter && <span className="ml-2">{iconAfter}</span>}
+          {iconAfter && <span style={{ marginLeft: "8px" }}>{iconAfter}</span>}
         </>
       )}
     </button>

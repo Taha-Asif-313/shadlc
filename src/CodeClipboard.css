@@ -1,0 +1,40 @@
+/* Code Block Container */
+.code-container {
+  position: relative;
+  background: #1e1e1e;
+  color: #fff;
+  padding: 0px;
+  border-radius: 5px;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+/* Copy Button Styling */
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: #3a3a3a;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  border: none;
+}
+
+/* Copy Button Hover */
+.copy-btn:hover {
+  background: #555;
+}
+
+/* Show "Copied!" on Click */
+.copied {
+  background: #004e04;
+  content: "Copied!";
+}
+pre {
+  background: transparent !important;
+  border: none;
+}
