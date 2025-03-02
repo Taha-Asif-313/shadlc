@@ -7,11 +7,13 @@ import "../../CodeClipboard.css"; // ✅ Import External Styles
 interface CodeClipboardProps {
   code: string;
   language?: string;
+  className?:string
 }
 
 export const CodeClipboard: React.FC<CodeClipboardProps> = ({
   code,
   language = "javascript",
+  className
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -30,7 +32,7 @@ export const CodeClipboard: React.FC<CodeClipboardProps> = ({
   };
 
   return (
-    <div className="code-container relative">
+    <div className={`code-container max-w-full w-full relative ${className}`}>
       {/* Copy Button */}
       <button
         onClick={handleCopy}
