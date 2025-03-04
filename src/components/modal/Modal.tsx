@@ -58,7 +58,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Modal Header */}
         {title && (
-          <div className="flex justify-between items-center border-b pb-2">
+          <div className="flex justify-between items-center pb-2">
             <h2 className="text-lg font-bold">{title}</h2>
             <button className="text-xl font-bold" onClick={onClose}>
               <svg
@@ -80,7 +80,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div className="py-4">{children}</div>
 
         {/* Modal Footer with Custom Buttons */}
-        <div className="flex justify-end border-t pt-2 space-x-2">
+        <div className="flex justify-end pt-2 space-x-2">
           {footerButtons.map((btn, index) => (
             <button
               key={index}
