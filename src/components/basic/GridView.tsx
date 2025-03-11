@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
+import { useMediaQuery } from "react-responsive";
 
 type ScreenSize = "sm" | "md" | "lg";
 
@@ -33,23 +34,14 @@ const GridView: React.FC<GridViewProps> = ({
   maxWidth = { sm: "100%", md: "100%", lg: "100%" },
   height = { sm: "auto", md: "auto", lg: "auto" },
   children,
-  className = "", // Ensuring it's always a string
+  className = "",
 }) => {
-  const [screenSize, setScreenSize] = useState<ScreenSize>("lg");
+  // Media Queries for screen sizes
+  const isSmall = useMediaQuery({ maxWidth: 767 });
+  const isMedium = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
-  useEffect(() => {
-    const updateSize = () => {
-      if (window.innerWidth < 768) setScreenSize("sm");
-      else if (window.innerWidth < 1024) setScreenSize("md");
-      else setScreenSize("lg");
-    };
-
-    updateSize(); // Set initial state
-    const resizeHandler = () => requestAnimationFrame(updateSize);
-    window.addEventListener("resize", resizeHandler);
-
-    return () => window.removeEventListener("resize", resizeHandler);
-  }, []);
+  // Determine screen size
+  const screenSize: ScreenSize = isSmall ? "sm" : isMedium ? "md" : "lg";
 
   // Memoized styles
   const styles = useMemo(
