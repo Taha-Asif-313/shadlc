@@ -5,6 +5,8 @@ interface InputProps {
   type?: "text" | "password" | "email" | "number" | "search" | "tel" | "url";
   placeholder?: string;
   label?: string;
+  name?: string;
+  labelClassname?: string;
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
@@ -34,6 +36,8 @@ export const Input: React.FC<InputProps> = ({
   value,
   defaultValue,
   onChange,
+  labelClassname,
+  name,
   disabled = false,
   readOnly = false,
   required = false,
@@ -106,6 +110,7 @@ export const Input: React.FC<InputProps> = ({
     <div style={{ width: "100%" }} className={className}>
       {label && (
         <label
+          className={labelClassname}
           style={{
             marginBottom: "5px",
             display: "block",
@@ -140,6 +145,7 @@ export const Input: React.FC<InputProps> = ({
                 : "password"
               : type
           }
+          name={name}
           value={value ?? inputValue}
           onChange={handleChange}
           placeholder={placeholder}

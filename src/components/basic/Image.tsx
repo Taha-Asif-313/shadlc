@@ -46,7 +46,7 @@ export const Image: React.FC<ImageProps> = ({
   overlayText,
   overlayColor = "rgba(0, 0, 0, 0.5)",
   svgIcon,
-  responsive = true,
+  responsive = false,
   padding,
   margin,
   lazyLoad = false,
