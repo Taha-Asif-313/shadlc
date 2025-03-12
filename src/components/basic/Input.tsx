@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiEye, FiEyeOff, FiX } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiX } from "react-icons/fi"; // Importing icons
 
 interface InputProps {
   type?: "text" | "password" | "email" | "number" | "search" | "tel" | "url";
@@ -72,7 +72,9 @@ export const Input: React.FC<InputProps> = ({
   const inputStyles: React.CSSProperties = {
     width: "100%",
     padding: "8px 16px",
-    border: `1px solid ${error ? errorColor : success ? successColor : borderColor}`,
+    border: `1px solid ${
+      error ? errorColor : success ? successColor : borderColor
+    }`,
     borderRadius: "6px",
     backgroundColor,
     color: textColor,
@@ -80,12 +82,42 @@ export const Input: React.FC<InputProps> = ({
     outline: "none",
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = focusBorderColor;
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = error
+      ? errorColor
+      : success
+      ? successColor
+      : borderColor;
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = hoverBorderColor;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = error
+      ? errorColor
+      : success
+      ? successColor
+      : borderColor;
+  };
+
   return (
     <div style={{ width: "100%" }} className={className}>
       {label && (
         <label
           className={labelClassname}
-          style={{ marginBottom: "5px", display: "block", fontSize: "14px", fontWeight: "500", color: textColor }}
+          style={{
+            marginBottom: "5px",
+            display: "block",
+            fontSize: "14px",
+            fontWeight: "500",
+            color: textColor,
+          }}
         >
           {label} {required && <span style={{ color: errorColor }}>*</span>}
         </label>
@@ -93,13 +125,26 @@ export const Input: React.FC<InputProps> = ({
 
       <div style={{ position: "relative", width: "100%" }}>
         {iconLeft && (
-          <span style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)" }}>
+          <span
+            style={{
+              position: "absolute",
+              left: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
             {iconLeft}
           </span>
         )}
 
         <input
-          type={type === "password" ? (isPasswordVisible ? "text" : "password") : type}
+          type={
+            type === "password"
+              ? isPasswordVisible
+                ? "text"
+                : "password"
+              : type
+          }
           name={name}
           value={value ?? inputValue}
           onChange={handleChange}
@@ -110,12 +155,24 @@ export const Input: React.FC<InputProps> = ({
           style={{
             ...inputStyles,
             paddingLeft: iconLeft ? "36px" : "16px",
-            paddingRight: iconRight || clearable || type === "password" ? "36px" : "16px",
+            paddingRight:
+              iconRight || clearable || type === "password" ? "36px" : "16px",
           }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         />
 
         {iconRight && type !== "password" && !clearable && (
-          <span style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)" }}>
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
             {iconRight}
           </span>
         )}
@@ -159,7 +216,11 @@ export const Input: React.FC<InputProps> = ({
         )}
       </div>
 
-      {error && <p style={{ fontSize: "12px", color: errorColor, marginTop: "4px" }}>{error}</p>}
+      {error && (
+        <p style={{ fontSize: "12px", color: errorColor, marginTop: "4px" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 };
