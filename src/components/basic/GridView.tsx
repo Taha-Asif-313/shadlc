@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { useMediaQuery } from "react-responsive";
+import React, { useMemo, useState, useEffect } from "react";
 
 type ScreenSize = "sm" | "md" | "lg";
 
@@ -11,7 +10,10 @@ interface ResponsiveProps<T> {
 
 interface GridViewProps {
   columns?: ResponsiveProps<number>;
+  rows?: ResponsiveProps<number>;
   gap?: ResponsiveProps<string>;
+  rowGap?: ResponsiveProps<string>;
+  columnGap?: ResponsiveProps<string>;
   padding?: ResponsiveProps<string>;
   alignItems?: ResponsiveProps<"start" | "center" | "end" | "stretch">;
   justifyItems?: ResponsiveProps<"start" | "center" | "end" | "stretch">;
@@ -25,7 +27,10 @@ interface GridViewProps {
 
 const GridView: React.FC<GridViewProps> = ({
   columns = { sm: 1, md: 2, lg: 3 },
+  rows = { sm: "auto", md: "auto", lg: "auto" },
   gap = { sm: "10px", md: "20px", lg: "30px" },
+  rowGap = { sm: "10px", md: "15px", lg: "20px" },
+  columnGap = { sm: "10px", md: "15px", lg: "20px" },
   padding = { sm: "10px", md: "20px", lg: "40px" },
   alignItems = { sm: "stretch", md: "center", lg: "center" },
   justifyItems = { sm: "stretch", md: "center", lg: "center" },
@@ -36,19 +41,34 @@ const GridView: React.FC<GridViewProps> = ({
   children,
   className = "",
 }) => {
-  // Media Queries for screen sizes
-  const isSmall = useMediaQuery({ maxWidth: 767 });
-  const isMedium = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
+  const [screenSize, setScreenSize] = useState<ScreenSize>("lg");
 
-  // Determine screen size
-  const screenSize: ScreenSize = isSmall ? "sm" : isMedium ? "md" : "lg";
+  useEffect(() => {
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      if (width <= 767) {
+        setScreenSize("sm");
+      } else if (width >= 768 && width <= 1023) {
+        setScreenSize("md");
+      } else {
+        setScreenSize("lg");
+      }
+    };
 
-  // Memoized styles
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
   const styles = useMemo(
     () => ({
       display: "grid",
       gridTemplateColumns: `repeat(${columns[screenSize]}, 1fr)`,
+      gridTemplateRows: rows[screenSize] !== "auto" ? `repeat(${rows[screenSize]}, 1fr)` : "auto",
       gap: gap[screenSize],
+      rowGap: rowGap[screenSize],
+      columnGap: columnGap[screenSize],
       padding: padding[screenSize],
       alignItems: alignItems[screenSize],
       justifyItems: justifyItems[screenSize],
@@ -57,7 +77,7 @@ const GridView: React.FC<GridViewProps> = ({
       maxWidth: maxWidth[screenSize],
       height: height[screenSize],
     }),
-    [screenSize, columns, gap, padding, alignItems, justifyItems, width, maxWidth, height, backgroundColor]
+    [screenSize, columns, rows, gap, rowGap, columnGap, padding, alignItems, justifyItems, width, maxWidth, height, backgroundColor]
   );
 
   return <div className={className} style={styles}>{children}</div>;

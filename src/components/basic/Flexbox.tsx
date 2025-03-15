@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { useMediaQuery } from "react-responsive";
+import React, { useMemo, useState, useEffect } from "react";
 
 type ScreenSize = "sm" | "md" | "lg";
 
@@ -45,14 +44,26 @@ const Flexbox: React.FC<FlexboxProps> = ({
   children,
   className = "",
 }) => {
-  // Media Queries for screen sizes
-  const isSmall = useMediaQuery({ maxWidth: 767 });
-  const isMedium = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
+  const [screenSize, setScreenSize] = useState<ScreenSize>("lg");
 
-  // Determine screen size
-  const screenSize: ScreenSize = isSmall ? "sm" : isMedium ? "md" : "lg";
+  useEffect(() => {
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      if (width <= 767) {
+        setScreenSize("sm");
+      } else if (width >= 768 && width <= 1023) {
+        setScreenSize("md");
+      } else {
+        setScreenSize("lg");
+      }
+    };
 
-  // Memoized styles
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
   const styles = useMemo(
     () => ({
       display: "flex",
