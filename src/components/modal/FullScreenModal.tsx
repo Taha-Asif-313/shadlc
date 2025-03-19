@@ -4,26 +4,35 @@ interface FullScreenModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  className: string
+  className?: string; // Make className optional
 }
 
-export const FullScreenModal: React.FC<FullScreenModalProps> = ({ isOpen, onClose, children , className }) => {
+export const FullScreenModal: React.FC<FullScreenModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  className = "",
+}) => {
+  // Prevent background scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Prevent background scrolling
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
+
+    // Cleanup function to reset overflow when component unmounts
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
 
+  // Return null if modal is not open
   if (!isOpen) return null;
 
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       role="dialog"
       aria-modal="true"
     >
@@ -31,6 +40,7 @@ export const FullScreenModal: React.FC<FullScreenModalProps> = ({ isOpen, onClos
         className={`${className} bg-white dark:bg-gray-900 dark:text-white w-full h-full p-6 relative shadow-lg`}
         role="document"
       >
+        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white rounded-full p-2"
           onClick={onClose}
@@ -52,6 +62,8 @@ export const FullScreenModal: React.FC<FullScreenModalProps> = ({ isOpen, onClos
             />
           </svg>
         </button>
+
+        {/* Modal Content */}
         {children}
       </div>
     </div>
