@@ -6,12 +6,27 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "full";
-  bgColor?: string;
-  textColor?: string;
-  overlayColor?: string;
   closeOnOverlayClick?: boolean;
   closeOnEsc?: boolean;
   footerButtons?: { label: string; onClick: () => void; color?: string }[];
+  styles?: {
+    overlay?: React.CSSProperties;
+    container?: React.CSSProperties;
+    header?: React.CSSProperties;
+    body?: React.CSSProperties;
+    footer?: React.CSSProperties;
+    closeIcon?: React.CSSProperties;
+    button?: React.CSSProperties;
+  };
+  classNames?: {
+    overlay?: string;
+    container?: string;
+    header?: string;
+    body?: string;
+    footer?: string;
+    closeIcon?: string;
+    button?: string;
+  };
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -20,12 +35,11 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   size = "md",
-  bgColor = "bg-white",
-  textColor = "text-black",
-  overlayColor = "bg-black bg-opacity-50",
   closeOnOverlayClick = true,
   closeOnEsc = true,
   footerButtons = [],
+  styles = {},
+  classNames = {},
 }) => {
   useEffect(() => {
     if (!closeOnEsc) return;
@@ -38,61 +52,124 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
-  const sizeClasses = {
-    sm: "w-1/4",
-    md: "w-1/2",
-    lg: "w-3/4",
-    full: "w-full h-full",
+  const sizeStyles: Record<string, React.CSSProperties> = {
+    sm: { width: "25%", maxWidth: "300px" },
+    md: { width: "50%", maxWidth: "500px" },
+    lg: { width: "75%", maxWidth: "800px" },
+    full: { width: "100%", height: "100%" },
   };
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center z-50 ${overlayColor}`}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        ...styles.overlay,
+      }}
+      className={classNames.overlay}
     >
       {closeOnOverlayClick && (
-        <div className="absolute inset-0" onClick={onClose}></div>
+        <div
+          style={{ position: "absolute", inset: 0 }}
+          onClick={onClose}
+        ></div>
       )}
 
       <div
-        className={`relative ${sizeClasses[size]} ${bgColor} ${textColor} p-6 rounded-lg shadow-lg transition-all transform scale-95 animate-fade-in`}
+        style={{
+          ...sizeStyles[size],
+          backgroundColor: "#ffffff",
+          color: "#000000",
+          padding: "20px",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          position: "relative",
+          zIndex: 1001,
+          transform: "scale(0.95)",
+          transition: "transform 0.2s ease-in-out",
+          ...styles.container,
+        }}
+        className={classNames.container}
       >
         {/* Modal Header */}
         {title && (
-          <div className="flex justify-between items-center pb-2">
-            <h2 className="text-lg font-bold">{title}</h2>
-            <button className="text-xl font-bold" onClick={onClose}>
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                strokeWidth="0"
-                viewBox="0 0 512 512"
-                height="30px"
-                width="30px"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M278.6 256l68.2-68.2c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-68.2-68.2c-6.2-6.2-16.4-6.2-22.6 0-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3l68.2 68.2-68.2 68.2c-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3 6.2 6.2 16.4 6.2 22.6 0l68.2-68.2 68.2 68.2c6.2 6.2 16.4 6.2 22.6 0 6.2-6.2 6.2-16.4 0-22.6L278.6 256z"></path>
-              </svg>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "10px",
+              ...styles.header,
+            }}
+            className={classNames.header}
+          >
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>{title}</h2>
+            <button
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                ...styles.closeIcon,
+              }}
+              className={classNames.closeIcon}
+              onClick={onClose}
+            >
+              ✖
             </button>
           </div>
         )}
 
         {/* Modal Body */}
-        <div className="py-4">{children}</div>
-
-        {/* Modal Footer with Custom Buttons */}
-        <div className="flex justify-end pt-2 space-x-2">
-          {footerButtons.map((btn, index) => (
-            <button
-              key={index}
-              className={`px-4 py-1 rounded ${
-                btn.color || "bg-black text-white"
-              }`}
-              onClick={btn.onClick}
-            >
-              {btn.label}
-            </button>
-          ))}
+        <div
+          style={{ padding: "15px 0", ...styles.body }}
+          className={classNames.body}
+        >
+          {children}
         </div>
+
+        {/* Modal Footer */}
+        {footerButtons.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "10px",
+              paddingTop: "10px",
+              ...styles.footer,
+            }}
+            className={classNames.footer}
+          >
+            {footerButtons.map((btn, index) => (
+              <button
+                key={index}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: btn.color || "#333",
+                  color: "#fff",
+                  transition: "background-color 0.2s ease-in-out",
+                  ...styles.button,
+                }}
+                className={classNames.button}
+                onClick={btn.onClick}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

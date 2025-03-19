@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 interface DrawerProps {
   open: boolean; // Whether the drawer is open
-  onClose?: () => void; // Callback when overlay is clicked to close the drawer
-  position?: "left" | "right" | "top" | "bottom"; // From which side the drawer appears
-  width?: string; // Applicable for left/right drawers (default: "250px")
-  height?: string; // Applicable for top/bottom drawers (default: "250px")
+  onClose?: () => void; // Callback to close the drawer
+  position?: "left" | "right" | "top" | "bottom"; // Drawer placement
+  width?: string; // For left/right drawers
+  height?: string; // For top/bottom drawers
   backgroundColor?: string; // Drawer background color
-  transitionDuration?: number; // Transition duration in milliseconds
-  style?: React.CSSProperties; // Additional custom inline styles for the drawer
-  children: React.ReactNode; // Inner content of the drawer
+  transitionDuration?: number; // Animation duration in milliseconds
+  style?: React.CSSProperties; // Custom styles
+  children: React.ReactNode; // Drawer content
 }
 
 const Drawer: React.FC<DrawerProps> = ({
@@ -23,100 +23,73 @@ const Drawer: React.FC<DrawerProps> = ({
   style = {},
   children,
 }) => {
-  // Determines the CSS transform property based on the drawer position and open state
-  const getTransform = (): string => {
+  const [isVisible, setIsVisible] = useState(open);
+
+  // Ensures drawer state doesn't flash on reload
+  useEffect(() => {
     if (open) {
-      return "translate(0, 0)";
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), transitionDuration);
     }
+  }, [open, transitionDuration]);
+
+  // Determines transform styles for open/close animation
+  const transform = useMemo(() => {
+    if (open) return "translate(0, 0)";
     switch (position) {
       case "left":
-        return "translate(-100%, 0)";
+        return "translateX(-100%)";
       case "right":
-        return "translate(100%, 0)";
+        return "translateX(100%)";
       case "top":
-        return "translate(0, -100%)";
+        return "translateY(-100%)";
       case "bottom":
-        return "translate(0, 100%)";
+        return "translateY(100%)";
       default:
         return "translate(0, 0)";
     }
-  };
+  }, [open, position]);
 
-  // Base inline styles for the drawer container
-  const drawerBaseStyle: React.CSSProperties = {
-    position: "fixed",
-    zIndex: 1000,
-    backgroundColor: backgroundColor,
-    transition: `transform ${transitionDuration}ms ease-in-out`,
-    ...style, // Merge any custom styles provided by the user
-  };
+  // Drawer styles
+  const drawerStyle: React.CSSProperties = useMemo(
+    () => ({
+      position: "fixed",
+      zIndex: 1000,
+      backgroundColor,
+      transition: `transform ${transitionDuration}ms ease-in-out, opacity ${transitionDuration}ms ease-in-out`,
+      transform,
+      opacity: open ? 1 : 0,
+      ...style,
+      ...(position === "left" || position === "right"
+        ? { top: 0, [position]: 0, width, height: "100%" }
+        : { left: 0, [position]: 0, width: "100%", height }),
+    }),
+    [transform, open, backgroundColor, transitionDuration, style, position, width, height]
+  );
 
-  // Set up positioning and sizing based on the 'position' prop
-  let drawerSpecificStyle: React.CSSProperties = {};
-  switch (position) {
-    case "left":
-      drawerSpecificStyle = {
-        top: 0,
-        left: 0,
-        width: width,
-        height: "100%",
-        transform: getTransform(),
-      };
-      break;
-    case "right":
-      drawerSpecificStyle = {
-        top: 0,
-        right: 0,
-        width: width,
-        height: "100%",
-        transform: getTransform(),
-      };
-      break;
-    case "top":
-      drawerSpecificStyle = {
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: height,
-        transform: getTransform(),
-      };
-      break;
-    case "bottom":
-      drawerSpecificStyle = {
-        bottom: 0,
-        left: 0,
-        width: "100%",
-        height: height,
-        transform: getTransform(),
-      };
-      break;
-  }
-
-  // Combine base and specific styles
-  const combinedStyles = { ...drawerBaseStyle, ...drawerSpecificStyle };
-
-  // Optional overlay style that dims the background when the drawer is open
-  const overlayStyle: React.CSSProperties = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    zIndex: 999,
-    transition: `opacity ${transitionDuration}ms ease-in-out`,
-    opacity: open ? 1 : 0,
-    pointerEvents: open ? "auto" : "none", // Allows clicks only when visible
-  };
+  // Overlay styles
+  const overlayStyle: React.CSSProperties = useMemo(
+    () => ({
+      position: "fixed",
+      display: isVisible ? "block" : "none",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 999,
+      transition: `opacity ${transitionDuration}ms ease-in-out`,
+      opacity: open ? 1 : 0,
+      pointerEvents: open ? "auto" : "none",
+    }),
+    [isVisible, open, transitionDuration]
+  );
 
   return (
     <>
-      {/* Overlay for closing the drawer */}
       <div style={overlayStyle} onClick={onClose} />
-      {/* Drawer container with inner content */}
-      <div style={combinedStyles}>
-        {children}
-      </div>
+      <div style={drawerStyle}>{children}</div>
     </>
   );
 };
